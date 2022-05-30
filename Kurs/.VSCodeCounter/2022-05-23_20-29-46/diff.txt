@@ -1,0 +1,114 @@
+Date : 2022-05-23 20:29:46
+Directory : c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug
+Total : 78 files,  19161 codes, -483 comments, -273 blanks, all 18405 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| C++        |         55 |     18,404 |       -489 |       -284 |     17,631 |
+| Makefile   |          1 |        459 |          7 |         14 |        480 |
+| JSON       |         18 |        406 |          0 |         16 |        422 |
+| JavaScript |          4 |       -108 |         -1 |        -19 |       -128 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                 | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                    |         78 |     19,161 |       -483 |       -273 |     18,405 |
+| ..                                                                                   |         43 |     -2,888 |       -737 |       -590 |     -4,215 |
+| ..\Kurs                                                                              |         43 |     -2,888 |       -737 |       -590 |     -4,215 |
+| ..\Kurs\scripts                                                                      |          4 |       -108 |         -1 |        -19 |       -128 |
+| Blocks                                                                               |         12 |        156 |          0 |         12 |        168 |
+| Blocks\Logic                                                                         |          6 |         78 |          0 |          6 |         84 |
+| Blocks\Math                                                                          |          2 |         26 |          0 |          2 |         28 |
+| Logic                                                                                |          1 |          8 |          0 |          0 |          8 |
+| SPARQL                                                                               |          2 |         21 |          0 |          1 |         22 |
+| debug                                                                                |         12 |     20,846 |        219 |        187 |     21,252 |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                             | language   | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Temp\Study\6 semestr\Kurs\Kurs\api.cpp                                            | C++        |        -11 |          0 |         -5 |        -16 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\api.h                                              | C++        |        -17 |          0 |         -7 |        -24 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\arrow.cpp                                          | C++        |        -92 |        -63 |        -18 |       -173 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\arrow.h                                            | C++        |        -40 |        -51 |        -11 |       -102 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\basedblocksetting.cpp                              | C++        |        -50 |          0 |        -14 |        -64 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\basedblocksetting.h                                | C++        |        -32 |          0 |         -7 |        -39 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\basedblockwindow.cpp                               | C++        |       -120 |          0 |        -16 |       -136 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\basedblockwindow.h                                 | C++        |        -39 |          0 |        -14 |        -53 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\compositeblocksetting.cpp                          | C++        |        -11 |          0 |         -8 |        -19 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\compositeblocksetting.h                            | C++        |        -21 |          0 |         -6 |        -27 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\compositeblockwindow.cpp                           | C++        |       -173 |         -3 |        -29 |       -205 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\compositeblockwindow.h                             | C++        |        -30 |          0 |         -7 |        -37 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramitem.cpp                                    | C++        |        -94 |        -63 |        -19 |       -176 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramitem.h                                      | C++        |        -44 |        -51 |        -11 |       -106 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramitembased.cpp                               | C++        |        -82 |          0 |        -20 |       -102 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramitembased.h                                 | C++        |        -37 |         -2 |         -6 |        -45 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramitemcomposite.cpp                           | C++        |        -21 |          0 |         -4 |        -25 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramitemcomposite.h                             | C++        |        -14 |         -1 |         -6 |        -21 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramitemsparql.cpp                              | C++        |        -32 |          0 |         -6 |        -38 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramitemsparql.h                                | C++        |        -18 |         -1 |         -6 |        -25 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramscene.cpp                                   | C++        |       -193 |        -77 |        -24 |       -294 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramscene.h                                     | C++        |        -62 |        -51 |        -15 |       -128 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramtextitem.cpp                                | C++        |        -30 |        -57 |         -7 |        -94 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramtextitem.h                                  | C++        |        -29 |        -51 |        -12 |        -92 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramview.cpp                                    | C++        |        -71 |          0 |        -13 |        -84 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\diagramview.h                                      | C++        |        -37 |          0 |         -9 |        -46 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\main.cpp                                           | C++        |        -11 |          0 |         -5 |        -16 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\mainwindow.cpp                                     | C++        |       -703 |       -161 |       -135 |       -999 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\mainwindow.h                                       | C++        |       -129 |        -51 |        -19 |       -199 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\mynetwork.cpp                                      | C++        |        -49 |          0 |        -13 |        -62 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\mynetwork.h                                        | C++        |        -29 |          0 |         -7 |        -36 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\outputwidget.cpp                                   | C++        |       -139 |        -42 |        -23 |       -204 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\outputwidget.h                                     | C++        |        -34 |          0 |         -9 |        -43 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\scripts\XMLHttpRequest.js                          | JavaScript |        -16 |          0 |         -4 |        -20 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\scripts\block_logic.js                             | JavaScript |        -58 |         -1 |         -5 |        -64 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\scripts\progress.js                                | JavaScript |        -15 |          0 |         -3 |        -18 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\scripts\script.js                                  | JavaScript |        -19 |          0 |         -7 |        -26 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\sparqlblocksetting.cpp                             | C++        |        -30 |         -7 |         -8 |        -45 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\sparqlblocksetting.h                               | C++        |        -14 |          0 |         -7 |        -21 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\sparqlblockwindow.cpp                              | C++        |       -196 |         -4 |        -29 |       -229 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\sparqlblockwindow.h                                | C++        |        -30 |          0 |         -8 |        -38 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\virtualsetting.cpp                                 | C++        |         -4 |          0 |         -3 |         -7 |
+| c:\Temp\Study\6 semestr\Kurs\Kurs\virtualsetting.h                                   | C++        |        -12 |          0 |         -5 |        -17 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\END.json                    | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\EnterNumber.json            | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\Logic\AND-NOT.json          | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\Logic\AND.json              | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\Logic\EnterBoolean.json     | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\Logic\NOT.json              | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\Logic\OR-NOT.json           | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\Logic\OR.json               | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\Math\Multiplication.json    | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\Math\Summary.json           | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\OutputBlock.json            | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Blocks\дуд.json                    | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Logic\files.json                   | JSON       |          8 |          0 |          0 |          8 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\Makefile                           | Makefile   |        459 |          7 |         14 |        480 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\SPARQL\files.json                  | JSON       |          8 |          0 |          0 |          8 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\SPARQL\test(v0.1).json             | JSON       |         13 |          0 |          1 |         14 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_api.cpp                  | C++        |        114 |         13 |         18 |        145 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_basedblockwindow.cpp     | C++        |        136 |         13 |         18 |        167 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_compositeblockwindow.cpp | C++        |        116 |         10 |         15 |        141 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_diagramscene.cpp         | C++        |        199 |         16 |         21 |        236 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_diagramtextitem.cpp      | C++        |        145 |         12 |         17 |        174 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_diagramview.cpp          | C++        |        125 |         10 |         15 |        150 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_mainwindow.cpp           | C++        |        276 |         10 |         15 |        301 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_mynetwork.cpp            | C++        |        137 |         10 |         15 |        162 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_outputwidget.cpp         | C++        |        127 |         10 |         15 |        152 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_predefs.h                | C++        |        408 |          0 |          1 |        409 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\moc_sparqlblockwindow.cpp    | C++        |        136 |         13 |         18 |        167 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\debug\qrc_diagramscene.cpp         | C++        |     18,927 |        102 |         19 |     19,048 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\lol.json                           | JSON       |         85 |          0 |          1 |         86 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\project.json                       | JSON       |         68 |          0 |          1 |         69 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\test.json                          | JSON       |         68 |          0 |          1 |         69 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\ui_basedblockwindow.h              | C++        |        155 |          7 |         47 |        209 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\ui_diagramview.h                   | C++        |         40 |          7 |         15 |         62 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\ui_mainwindow.h                    | C++        |         43 |          7 |         13 |         63 |
+| c:\Temp\Study\6 semestr\Kurs\build-Kurs-GCC-Debug\ui_outputwidget.h                  | C++        |        100 |          7 |         25 |        132 |
+| Total                                                                                |            |     19,161 |       -483 |       -273 |     18,405 |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

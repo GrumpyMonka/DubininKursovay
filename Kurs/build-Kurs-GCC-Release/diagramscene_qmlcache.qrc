@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<RCC>
+    <qresource prefix="/">
+        <file alias="images/pointer.png">../Kurs/images/pointer.png</file>
+        <file alias="images/linepointer.png">../Kurs/images/linepointer.png</file>
+        <file alias="images/textpointer.png">../Kurs/images/textpointer.png</file>
+        <file alias="images/bold.png">../Kurs/images/bold.png</file>
+        <file alias="images/italic.png">../Kurs/images/italic.png</file>
+        <file alias="images/underline.png">../Kurs/images/underline.png</file>
+        <file alias="images/floodfill.png">../Kurs/images/floodfill.png</file>
+        <file alias="images/bringtofront.png">../Kurs/images/bringtofront.png</file>
+        <file alias="images/delete.png">../Kurs/images/delete.png</file>
+        <file alias="images/sendtoback.png">../Kurs/images/sendtoback.png</file>
+        <file alias="images/linecolor.png">../Kurs/images/linecolor.png</file>
+        <file alias="images/background1.png">../Kurs/images/background1.png</file>
+        <file alias="images/background2.png">../Kurs/images/background2.png</file>
+        <file alias="images/background3.png">../Kurs/images/background3.png</file>
+        <file alias="images/background4.png">../Kurs/images/background4.png</file>
+        <file alias="images/script.png">../Kurs/images/script.png</file>
+        <file alias="images/execution.png">../Kurs/images/execution.png</file>
+        <file alias="scripts/test_setting.json">../Kurs/scripts/test_setting.json</file>
+        <file alias="images/based.png">../Kurs/images/based.png</file>
+        <file alias="images/composite.png">../Kurs/images/composite.png</file>
+        <file alias="images/open.png">../Kurs/images/open.png</file>
+        <file alias="images/save.png">../Kurs/images/save.png</file>
+        <file alias="images/settings.png">../Kurs/images/settings.png</file>
+    </qresource>
+</RCC>
