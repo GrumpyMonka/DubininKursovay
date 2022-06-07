@@ -1,8 +1,0 @@
-{
-    "name": "SPARQL",
-    "path":{
-        "files":[
-            "SPARQL/test(v0.1).json"
-        ]
-    }
-}
