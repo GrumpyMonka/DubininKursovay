@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_DiagramScene_t {
-    QByteArrayData data[17];
-    char stringdata0[182];
+    QByteArrayData data[18];
+    char stringdata0[189];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -47,14 +47,15 @@ QT_MOC_LITERAL(12, 120, 11), // "setItemType"
 QT_MOC_LITERAL(13, 132, 4), // "type"
 QT_MOC_LITERAL(14, 137, 15), // "editorLostFocus"
 QT_MOC_LITERAL(15, 153, 16), // "DiagramTextItem*"
-QT_MOC_LITERAL(16, 170, 11) // "createArrow"
+QT_MOC_LITERAL(16, 170, 11), // "createArrow"
+QT_MOC_LITERAL(17, 182, 6) // "Arrow*"
 
     },
     "DiagramScene\0itemInserted\0\0textInserted\0"
     "QGraphicsTextItem*\0item\0itemSelected\0"
     "DiagramItem*\0doubleClick\0setMode\0Mode\0"
     "mode\0setItemType\0type\0editorLostFocus\0"
-    "DiagramTextItem*\0createArrow"
+    "DiagramTextItem*\0createArrow\0Arrow*"
 };
 #undef QT_MOC_LITERAL
 
@@ -93,7 +94,7 @@ static const uint qt_meta_data_DiagramScene[] = {
     QMetaType::Void, 0x80000000 | 10,   11,
     QMetaType::Void, QMetaType::Int,   13,
     QMetaType::Void, 0x80000000 | 15,    5,
-    QMetaType::Void, 0x80000000 | 7, 0x80000000 | 7,    2,    2,
+    0x80000000 | 17, 0x80000000 | 7, 0x80000000 | 7,    2,    2,
 
        0        // eod
 };
@@ -111,7 +112,8 @@ void DiagramScene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 4: _t->setMode((*reinterpret_cast< Mode(*)>(_a[1]))); break;
         case 5: _t->setItemType((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 6: _t->editorLostFocus((*reinterpret_cast< DiagramTextItem*(*)>(_a[1]))); break;
-        case 7: _t->createArrow((*reinterpret_cast< DiagramItem*(*)>(_a[1])),(*reinterpret_cast< DiagramItem*(*)>(_a[2]))); break;
+        case 7: { Arrow* _r = _t->createArrow((*reinterpret_cast< DiagramItem*(*)>(_a[1])),(*reinterpret_cast< DiagramItem*(*)>(_a[2])));
+            if (_a[0]) *reinterpret_cast< Arrow**>(_a[0]) = std::move(_r); }  break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {

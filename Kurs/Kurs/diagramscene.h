@@ -91,7 +91,7 @@ public slots:
     void setMode(Mode mode);
     void setItemType(int type);
     void editorLostFocus(DiagramTextItem *item);
-    void createArrow(DiagramItem*, DiagramItem*);
+    Arrow* createArrow(DiagramItem*, DiagramItem*);
 
 
 signals:

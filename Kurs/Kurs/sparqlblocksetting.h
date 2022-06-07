@@ -38,6 +38,11 @@ public:
     QPolygonF polygon;
 
     BasedBlockSetting* ConvertToBasedBlockSetting();
+    QJsonObject getJsonFromSetting();
+    void setSettingFromJson( const QString& str );
+    void setSettingFromJson( const QJsonValue& value );
+    QJsonValue jsonValFromPixmap( const QPixmap &p );
+    QPixmap pixmapFromJsonVal( const QJsonValue &val );
 };
 
 #endif // SPARQLBLOCKSETTING_H

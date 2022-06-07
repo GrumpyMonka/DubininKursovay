@@ -7,6 +7,8 @@ DiagramItemSparql::DiagramItemSparql( QMenu *contextMenu, SparqlBlockSetting* se
     setBrush( Qt::green );
 
     name = new DiagramTextItem( this, false, true );
+    name->setPos(getStartPos());
+
     proxy_picture = new QGraphicsProxyWidget( this );
     picture = new QLabel();
     picture->setGeometry(getEndPos().x() - 32, getStartPos().y() + 2, 30, 30);

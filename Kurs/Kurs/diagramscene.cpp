@@ -76,9 +76,9 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
 void DiagramScene::setLineColor(const QColor &color)
 {
     myLineColor = color;
-    if (isItemChange(Arrow::Type)) {
-        Arrow *item = ( Arrow* )( selectedItems().first() );
-        item->setColor(myLineColor);
+    if ( isItemChange( Arrow::Type ) ) {
+        Arrow *item = static_cast<Arrow*>( selectedItems().first() );
+        item->setColor( myLineColor );
         update();
     }
 }
@@ -88,9 +88,9 @@ void DiagramScene::setLineColor(const QColor &color)
 void DiagramScene::setTextColor(const QColor &color)
 {
     myTextColor = color;
-    if (isItemChange(DiagramTextItem::Type)) {
-        DiagramTextItem *item = ( DiagramTextItem* )( selectedItems().first() );
-        item->setDefaultTextColor(myTextColor);
+    if ( isItemChange( DiagramTextItem::Type ) ) {
+        DiagramTextItem *item = static_cast<DiagramTextItem*>( selectedItems().first() );
+        item->setDefaultTextColor( myTextColor );
     }
 }
 //! [2]
@@ -99,9 +99,9 @@ void DiagramScene::setTextColor(const QColor &color)
 void DiagramScene::setItemColor(const QColor &color)
 {
     myItemColor = color;
-    if (isItemChange(DiagramItem::Type)) {
-        DiagramItem *item = ( DiagramItem* )( selectedItems().first() );
-        item->setBrush(myItemColor);
+    if ( isItemChange( DiagramItem::Type ) ) {
+        DiagramItem *item = static_cast<DiagramItem*>( selectedItems().first() );
+        item->setBrush( myItemColor );
     }
 }
 //! [3]
@@ -111,16 +111,16 @@ void DiagramScene::setFont(const QFont &font)
 {
     myFont = font;
 
-    if (isItemChange(DiagramTextItem::Type)) {
-        QGraphicsTextItem *item = ( DiagramTextItem* )( selectedItems().first() );
+    if ( isItemChange( DiagramTextItem::Type ) ) {
+        QGraphicsTextItem *item = static_cast<DiagramTextItem*>( selectedItems().first() );
         //At this point the selection can change so the first selected item might not be a DiagramTextItem
-        if (item)
-            item->setFont(myFont);
+        if ( item )
+            item->setFont( myFont );
     }
 }
 //! [4]
 
-void DiagramScene::setVirtualList(QVector<VirtualSetting*>* list){
+void DiagramScene::setVirtualList( QVector<VirtualSetting*>* list ){
     virtual_blocks_list = list;
 }
 
@@ -157,13 +157,19 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     DiagramItem* item;
     switch (myMode) {
         case InsertItem:
-            if ( BasedBlockSetting::Type == virtual_blocks_list->at( myItemType )->type() )
-                item = new DiagramItemBased(myItemMenu, ( BasedBlockSetting* )( virtual_blocks_list->at( myItemType ) ) );
-            item->setBrush(myItemColor);
-            addItem(item);
-            item->setPos(mouseEvent->scenePos());
-            emit itemInserted(myItemType);
-            emit itemSelected(item);
+            switch ( virtual_blocks_list->at( myItemType )->type() ) {
+                case BasedBlockSetting::Type :
+                    item = new DiagramItemBased( myItemMenu, static_cast<BasedBlockSetting*>( virtual_blocks_list->at( myItemType ) ) );
+                    break;
+                case SparqlBlockSetting::Type :
+                    item = new DiagramItemSparql(myItemMenu, static_cast<SparqlBlockSetting*>( virtual_blocks_list->at( myItemType ) ) );
+                    break;
+            }
+            //item->setBrush( myItemColor );
+            addItem( item );
+            item->setPos( mouseEvent->scenePos() );
+            emit itemInserted( myItemType );
+            emit itemSelected( item );
             break;
 //! [6] //! [7]
         case InsertLine:
@@ -193,7 +199,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
     foreach(QGraphicsItem* temp, this->selectedItems()){
         if(  CheckItemOnDiagramItem( temp->type() ) ){
-            emit itemSelected( ( DiagramItem* )( temp ) );
+            emit itemSelected( static_cast<DiagramItem*>( temp ) );
             break;
         }
     }
@@ -220,7 +226,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
     foreach(QGraphicsItem* temp, this->selectedItems()){
         if( CheckItemOnDiagramItem( temp->type() ) ){
-            emit itemSelected( ( DiagramItem* )( temp ) );
+            emit itemSelected( static_cast<DiagramItem*>( temp ) );
             break;
         }
     }
@@ -264,8 +270,8 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 CheckItemOnDiagramItem( startItems.first()->type() ) &&
                 CheckItemOnDiagramItem( endItems.first()->type() ) &&
                 startItems.first() != endItems.first()) {
-                DiagramItem *startItem = ( DiagramItem * )( startItems.first() );
-                DiagramItem *endItem = ( DiagramItem * )( endItems.first() );
+                DiagramItem *startItem = static_cast<DiagramItem*>( startItems.first() );
+                DiagramItem *endItem = static_cast<DiagramItem*>( endItems.first() );
                 createArrow(startItem, endItem);
             }
         }
@@ -276,7 +282,7 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 }
 //! [13]
 
-void DiagramScene::createArrow(DiagramItem *startItem, DiagramItem *endItem){
+Arrow* DiagramScene::createArrow(DiagramItem *startItem, DiagramItem *endItem){
     Arrow *arrow = new Arrow(startItem, endItem);
     arrow->setColor(myLineColor);
     startItem->addArrow(arrow);
@@ -284,6 +290,7 @@ void DiagramScene::createArrow(DiagramItem *startItem, DiagramItem *endItem){
     arrow->setZValue(-1000.0);
     addItem(arrow);
     arrow->updatePosition();
+    return arrow;
 }
 
 //! [14]

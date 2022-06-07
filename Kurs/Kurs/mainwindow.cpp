@@ -168,10 +168,10 @@ void MainWindow::slotSaveProject(){
         return;
     foreach (QGraphicsItem * item, getCurrentScene()->items()){
         if(item->type() == DiagramItemBased::Type){
-            based_list.push_back( ( DiagramItemBased* )( item ) );
+            based_list.push_back( static_cast<DiagramItemBased*>( item ) );
         }else{
             if(item->type() == Arrow::Type){
-                arrow_list.push_back( ( Arrow* )( item ) );
+                arrow_list.push_back( static_cast<Arrow*>( item ) );
             }
         }
     }
@@ -198,8 +198,8 @@ void MainWindow::slotSaveProject(){
     QJsonArray array_arrow;
     for(int i = 0; i < arrow_list.size(); i++){
         QJsonObject temp_obj;
-        temp_obj.insert("start", based_list.indexOf( ( DiagramItemBased* )( arrow_list[i]->startItem() ) ) );
-        temp_obj.insert("end", based_list.indexOf( ( DiagramItemBased* )( arrow_list[i]->endItem() ) ) );
+        temp_obj.insert("start", based_list.indexOf( static_cast<DiagramItemBased*>( arrow_list[i]->startItem() ) ) );
+        temp_obj.insert("end", based_list.indexOf( static_cast<DiagramItemBased*>( arrow_list[i]->endItem() ) ) );
         array_arrow.push_back(temp_obj);
     }
     obj.insert("arrows", array_arrow);
@@ -241,15 +241,28 @@ void MainWindow::loadSettings(){
         }
     }
 
-    for(int i = 0; i < files.size(); i++){
-        QFile file(files[i]);
-        if(!file.open(QIODevice::ReadOnly)){
-            continue;
-        }
-        BasedBlockSetting* setting = new BasedBlockSetting();
-        setting->setSettingFromJson( file.readAll() );
-        virtual_blocks_list.push_back( setting );
+    for( int i = 0; i < files.size(); i++ )
+    {
+        QFile file( files[i] );
+        if( file.open(QIODevice::ReadOnly) )
+        {
+            QString text = file.readAll();
+            QJsonDocument json = QJsonDocument::fromJson( text.toUtf8() );
 
+            QString type = json["type"].toString();
+            if ( "basic" == type )
+            {
+                BasedBlockSetting* setting = new BasedBlockSetting();
+                setting->setSettingFromJson( text );
+                virtual_blocks_list.push_back( setting );
+            }
+            else if ( "sparql" == type )
+            {
+                SparqlBlockSetting* setting = new SparqlBlockSetting();
+                setting->setSettingFromJson( text );
+                virtual_blocks_list.push_back( setting );
+            }
+        }
         file.close();
     }
 }
@@ -278,11 +291,11 @@ void MainWindow::backgroundButtonGroupClicked(QAbstractButton *button)
 //! [1]
 
 DiagramScene* MainWindow::getCurrentScene(){
-    DiagramView* item = (DiagramView*)(tabWidget->currentWidget());
+    DiagramView* item = static_cast<DiagramView*>(tabWidget->currentWidget());
     if(item == nullptr){
         return nullptr;
     }
-    return (DiagramScene*)(item->scene());
+    return static_cast<DiagramScene*>(item->scene());
 }
 
 //! [2]
@@ -305,8 +318,8 @@ void MainWindow::slotReworkBlock(){
     foreach(QGraphicsItem* item, getCurrentScene()->selectedItems()){
         if( DiagramItemBased::Type == item->type() ){
             BasedBlockWindow* window = new BasedBlockWindow();
-            window->setBasedBlockOnRework( ( DiagramItemBased* )( item ) );
-            tabWidget->addTab(window, ( ( DiagramItemBased* )( item ) )->getName() );
+            window->setBasedBlockOnRework( static_cast<DiagramItemBased*>( item ) );
+            tabWidget->addTab(window, ( static_cast<DiagramItemBased*>( item ) )->getName() );
             tabWidget->setCurrentWidget(window);
         }
         if( DiagramItemComposite::Type == item->type() ){
@@ -344,7 +357,7 @@ void MainWindow::slotCreateCompositeBlock(){
 }
 
 void MainWindow::slotCreateSparqlBlock(){
-    SparqlBlockWindow* window = new SparqlBlockWindow(createScene(), this);
+    SparqlBlockWindow* window = new SparqlBlockWindow( createScene(), createScene(), this );
     connect(window, SIGNAL( newSparqlBlockCreated( VirtualSetting* ) ),
             this, SLOT( slotOnSignalNewBlockCreated( VirtualSetting* ) ) );
     tabWidget->addTab(window, "NewSparqlBlock");
@@ -366,7 +379,7 @@ void MainWindow::runScene(){
     QVector<DiagramItem*> objects;
     foreach( QGraphicsItem* item, getCurrentScene()->items() ){
         if( DiagramScene::CheckItemOnDiagramItem( item->type() ) ){
-            objects.push_back( ( DiagramItem* )( item ) );
+            objects.push_back( static_cast<DiagramItem*>( item ) );
         }
     }
 
@@ -383,7 +396,7 @@ void MainWindow::deleteItem()
     foreach (QGraphicsItem *item, getCurrentScene()->selectedItems()) {
         if (item->type() == Arrow::Type) {
             getCurrentScene()->removeItem(item);
-            Arrow *arrow = ( Arrow* )( item );
+            Arrow *arrow = static_cast<Arrow*>( item );
             arrow->startItem()->removeArrow(arrow);
             arrow->endItem()->removeArrow(arrow);
             delete item;
@@ -392,7 +405,7 @@ void MainWindow::deleteItem()
 
     foreach (QGraphicsItem *item, getCurrentScene()->selectedItems()) {
          if ( item->type() == DiagramItem::Type )
-             ( ( DiagramItem* )( item ) )->removeArrows();
+             ( static_cast<DiagramItem*>( item ) )->removeArrows();
          getCurrentScene()->removeItem(item);
          delete item;
      }
