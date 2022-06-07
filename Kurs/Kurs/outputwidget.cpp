@@ -1,5 +1,7 @@
 #include "outputwidget.h"
 #include "ui_outputwidget.h"
+#include "diagramitemcomposite.h"
+#include "diagramitemsparql.h"
 
 OutputWidget::OutputWidget(QWidget *parent) :
     QMainWindow(parent),
@@ -32,46 +34,6 @@ void OutputWidget::setText(QString str){
     ui->textEdit->setText(str);
 }
 
-/*
-QString OutputWidget::createScript(int index){
-    QString result;
-    QString script;
-    script = "<p style=\"white-space: pre-wrap;\">" + getHtmlLine("<span style=\"color: #569cd6\">function</span> func_" + QString::number(index) + "(){") +
-            getHtmlLine("\tvar x = [];") +
-            getHtmlLine("\tvar y = [];");
-
-    int temp_index = index;
-    foreach(Arrow * arrow, item->getArrows()){
-        if(arrow->startItem() != item){
-            script += getHtmlLine("\tx.push(<span style=\"color: red\";>func_" + QString::number(++index) + "()</span>);");
-            result += createScript(qgraphicsitem_cast<DiagramItemBased *>(arrow->startItem()), index);
-        }
-    }
-    script += getHtmlLine("\tnetwork.setInputData(" + QString::number(temp_index) +", x);");
-    script += getHtmlLine("");
-    if(item->GetInputData() != ""){
-        script += getHtmlLine("\tvar input = " + item->GetInputData() + ";");
-    }
-    QStringList list = item->getSetting().script.split("\n");
-    foreach(QString iter, list){
-        for(int  i = 0; i < iter.size(); i++){
-            if(iter[i] == "<"){
-                iter = iter.mid(0, i) + "&lt;" + iter.mid(i + 1, iter.size());
-            }
-            if(iter[i] == ">"){
-                iter = iter.mid(0, i) + "&gt;" + iter.mid(i + 1, iter.size());
-            }
-        }
-        script += getHtmlLine("\t" + iter);
-    }
-    script += getHtmlLine("\t<span style=\"color: green;\">ProgressBar.ping();</span>") +
-            getHtmlLine("\tnetwork.setOutputData(" + QString::number(temp_index) +", y);") +
-            getHtmlLine("\treturn y;") +
-            getHtmlLine("}") + "</p>";
-    result += script;
-    return result;
-}
-*/
 void OutputWidget::Script( QVector<DiagramItem*>& obj ){
     api->block_list = obj;
     QString script = "<p style=\"white-space: pre-wrap;\">";
@@ -90,14 +52,38 @@ QString OutputWidget::getHtmlLine(QString line, QString style){
 }
 
 QString OutputWidget::createScript( int index ){
-    /*QString result = "";
-    // block_list.push( new Block( function(){}, input, output, input_blocks ) );
+    QString result = "";
+    DiagramItem* diagram_item = api->block_list[index];
+
     result += getHtmlLine( "\nblocks_list.push( new Block( " );
     result += getHtmlLine( "\tfunction( x ) {" );
-    if( api->block_list[index]->GetInputData() != "")
-        result += getHtmlLine( "\t\tvar input = " + api->based_block_list.at(index)->GetInputData() + ";");
+
+    switch ( diagram_item->type() )
+    {
+        case DiagramItemBased::Type :
+            if( ( static_cast<DiagramItemBased*>( diagram_item ) )->GetInputData() != "")
+                result += getHtmlLine( "\t\tvar input = " + ( static_cast<DiagramItemBased*>( diagram_item ) )->GetInputData() + ";");
+            break;
+
+        case DiagramItemSparql::Type :
+            result += getHtmlLine( "\t\tvar input = \"\";");
+            break;
+    }
+
     result += getHtmlLine( "\t\tvar y = [];" );
-    QStringList list = api->based_block_list[index]->getSetting()->script.split("\n");
+
+    QStringList list;
+    switch ( diagram_item->type() )
+    {
+        case DiagramItemBased::Type :
+            list = ( static_cast<DiagramItemBased*>( diagram_item ) )->getSetting()->script.split( "\n" );
+            break;
+
+        case DiagramItemSparql::Type :
+            list = ( static_cast<DiagramItemSparql*>( diagram_item ) )->getSetting()->ConvertToBasedBlockSetting()->script.split( "\n" );
+            break;
+    }
+
     foreach(QString iter, list){
         for(int  i = 0; i < iter.size(); i++){
             if(iter[i] == "<"){
@@ -116,12 +102,14 @@ QString OutputWidget::createScript( int index ){
     result += getHtmlLine( "\t[ ]," );
 
     QString temp = "[ ";
-    foreach(Arrow* arrow, api->based_block_list[index]->getArrows()){
-        if(arrow->startItem() != api->based_block_list[index]){
-            temp += QString::number(api->based_block_list.indexOf(qgraphicsitem_cast<DiagramItemBased*>(arrow->startItem())));
+
+    foreach(Arrow* arrow, api->block_list[index]->getArrows()){
+        if(arrow->startItem() != api->block_list[index]){
+            temp += QString::number( api->block_list.indexOf( arrow->startItem() ) );
             temp += ", ";
         }
     }
+
     if(temp[temp.size() - 2] == ",")
         temp.remove(temp.size() - 2, 1);
 
@@ -129,7 +117,7 @@ QString OutputWidget::createScript( int index ){
 
     result += getHtmlLine( "\t" + temp );
     result += getHtmlLine( "));\n" );
-    return result;*/
+    return result;
 }
 
 QString OutputWidget::loadScript(QString path){
@@ -137,7 +125,6 @@ QString OutputWidget::loadScript(QString path){
     QScriptValue result;
     if(f.open(QIODevice::ReadOnly)){
         QString str = f.readAll();
-        qDebug() << path + "  " + str;
         result = engine->evaluate(str, path);
         if(result.isError()){
             return result.toString();

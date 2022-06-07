@@ -50,6 +50,8 @@ BasedBlockSetting* SparqlBlockSetting::ConvertToBasedBlockSetting()
             "var xmlHttp = new XMLHttpRequest(network);\n"
             "xmlHttp.setUrl(\"http://localhost:3030/nuclear/sparql\");\n"
             "xmlHttp.open(\"POST\", \"/\");\n"
+            "xmlHttp.setRequestHeader(\"Connection\", \"keep-alive\");\n"
+            "xmlHttp.setRequestHeader(\"Accept\", \"application/sparql-results+json\");\n"
             "var answer = xmlHttp.send(";
 
     QVector<QString> list;
@@ -82,12 +84,120 @@ BasedBlockSetting* SparqlBlockSetting::ConvertToBasedBlockSetting()
     request += "\nWHERE\n"
             "  {\n";
     request += "  " + body;
-    request += "} LIMIT 10";
+    request += "} LIMIT " + QString::number( limit );
 
     BasedBlockSetting* setting = new BasedBlockSetting();
     setting->label = false;
     setting->line_edit = false;
     setting->name = "SPARQL";
     setting->script = script + "\"query=" + QUrl::toPercentEncoding(request) + "\");\ny.push(answer);";
+    qDebug() << request;
     return setting;
+}
+
+void SparqlBlockSetting::setSettingFromJson( const QString& str )
+{
+    QJsonDocument json = QJsonDocument::fromJson( str.toUtf8() );
+    if( json.isObject() ){
+        setSettingFromJson( json["data"] );
+    }
+}
+
+void SparqlBlockSetting::setSettingFromJson( const QJsonValue& value )
+{
+    if ( value.isObject() )
+    {
+        name = value["name"].toString();
+        //type_image = value["type_img"].toString();
+        image = pixmapFromJsonVal( value["image"] );
+        limit = value["limit"].toInt();
+
+        blocks.clear();
+        for ( const QJsonValue& block : value["blocks"].toArray() )
+        {
+            blocks.push_back( { block["text"].toString(),
+                                QPointF( block["pos_x"].toDouble(), block["pos_y"].toDouble() ) } );
+        }
+
+        lines.clear();
+        for ( const QJsonValue& line : value["lines"].toArray() )
+        {
+            lines.push_back( { line["start_block"].toInt(), line["end_block"].toInt(), line["text"].toString() } );
+        }
+    }
+}
+/*
+    struct LineSaver
+    {
+        int startBlock;
+        int endBlock;
+        QString text;
+    };
+
+    struct BlockSaver
+    {
+        QString text;
+        QPointF pos;
+    };
+
+    QVector<BlockSaver> blocks;
+    QVector<LineSaver> lines;
+    int limit;
+    QPixmap image;
+    QString name;
+
+    QPolygonF polygon;
+*/
+QJsonObject SparqlBlockSetting::getJsonFromSetting()
+{
+    QJsonObject obj;
+
+    QJsonObject data;
+    data.insert( "name", QJsonValue( name ) );
+    data.insert( "type_img", QJsonValue( "" ) );
+    data.insert( "image", jsonValFromPixmap( image ) );
+    data.insert( "limit", QJsonValue( limit ) );
+
+    QJsonArray array_blocks;
+    for ( const auto& next_block : blocks )
+    {
+        QJsonObject temp_obj;
+        temp_obj.insert( "text", QJsonValue( next_block.text ) );
+        temp_obj.insert( "pos_x", QJsonValue( next_block.pos.x() ) );
+        temp_obj.insert( "pos_y", QJsonValue( next_block.pos.y() ) );
+        array_blocks.push_back( temp_obj );
+    }
+    data.insert( "blocks", array_blocks );
+
+    QJsonArray array_lines;
+    for ( const auto& next_line : lines )
+    {
+        QJsonObject temp_obj;
+        temp_obj.insert( "text", QJsonValue( next_line.text ) );
+        temp_obj.insert( "start_block", QJsonValue( next_line.startBlock ) );
+        temp_obj.insert( "end_block", QJsonValue( next_line.endBlock ) );
+        array_lines.push_back( temp_obj );
+    }
+    data.insert( "lines", array_lines );
+
+    obj.insert( "type", QJsonValue( "sparql" ) );
+    obj.insert( "data", QJsonValue( data ) );
+    return obj;
+}
+
+QJsonValue SparqlBlockSetting::jsonValFromPixmap( const QPixmap &p )
+{
+    QBuffer buffer;
+    buffer.open( QIODevice::WriteOnly );
+    p.save( &buffer, "PNG" );
+    auto const encoded = buffer.data().toBase64();
+    return { QLatin1String( encoded ) };
+}
+
+QPixmap SparqlBlockSetting::pixmapFromJsonVal( const QJsonValue &val )
+{
+    auto const encoded = val.toString().toLatin1();
+    QPixmap p;
+    p.loadFromData( QByteArray::fromBase64( encoded ), "PNG" );
+    return p;
 }

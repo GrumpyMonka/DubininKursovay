@@ -24,7 +24,6 @@ void BasedBlockSetting::setSettingFromJson(QString str){
     QJsonDocument json = QJsonDocument::fromJson(str.toUtf8());
     if(json.isObject()){
         setSettingFromJson(json["data"]);
-
     }
 }
 

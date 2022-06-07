@@ -10,7 +10,7 @@ class SparqlBlockWindow : public DiagramView
 {
     Q_OBJECT
 public:
-    SparqlBlockWindow(DiagramScene*, QWidget* parent = 0);
+    SparqlBlockWindow(DiagramScene* origin, DiagramScene* minus, QWidget* parent = 0);
     void paint() override;
 
 public slots:
@@ -21,11 +21,21 @@ public slots:
     void addNewArea();
     void addNewObject();
     void createSparqlBlock();
+    void openFile();
+    void setSetting();
+    void createBlock();
+    void sceneReverse();
+    SparqlBlockSetting* getSetting();
 
 signals:
     void newSparqlBlockCreated( VirtualSetting* );
 
 private:
+    DiagramScene* origin_scene;
+    DiagramScene* minus_scene;
+    QPushButton* button_reverse;
+    QLabel* name_window_scene;
+
     QRectF size = QRectF(-50, -50, 100, 100);
     DiagramItem* selectedItem;
     QSpinBox* size_x_spin;

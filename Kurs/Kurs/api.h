@@ -8,6 +8,7 @@ class API : public QObject
 {
     Q_OBJECT
 public:
+
     explicit API(QObject* parent = nullptr);
 
     QVector<DiagramItem*> block_list; // костыль

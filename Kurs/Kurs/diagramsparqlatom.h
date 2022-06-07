@@ -14,6 +14,7 @@ public:
 
     void setMyPolygon( QPolygonF polygonf );
     QPolygonF getSetting();
+    void setText( const QString& str );
     QString getText();
 
 private:

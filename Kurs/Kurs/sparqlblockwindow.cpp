@@ -1,14 +1,18 @@
 #include "sparqlblockwindow.h"
 #include "diagramsparqlatom.h"
 
-SparqlBlockWindow::SparqlBlockWindow(DiagramScene* scene, QWidget* parent)
-    : DiagramView(scene, parent)
+#include <QFileDialog>
+
+SparqlBlockWindow::SparqlBlockWindow(DiagramScene* origin, DiagramScene* minus, QWidget* parent)
+    : DiagramView(origin, parent), origin_scene( origin ), minus_scene( minus )
 {
     paint();
     setting = new SparqlBlockSetting();
     addNewArea();
-    connect(scene, SIGNAL(itemSelected(DiagramItem*)),
-            this, SLOT(itemSelected(DiagramItem*)));
+    connect(origin, SIGNAL( itemSelected( DiagramItem* ) ),
+            this, SLOT( itemSelected( DiagramItem* ) ) );
+    connect(minus, SIGNAL( itemSelected( DiagramItem* ) ),
+            this, SLOT( itemSelected( DiagramItem* ) ) );
 }
 
 void SparqlBlockWindow::paint(){
@@ -83,7 +87,7 @@ void SparqlBlockWindow::paint(){
     QLabel* name_label = new QLabel( "Name block: ");
 
     name_line_edit = new QLineEdit();
-    name_line_edit->setText( "SPARQL request" );
+    name_line_edit->setText( "SPARQL" );
 
     QLabel* limit_label = new QLabel( "Limit SPARQL records: " );
 
@@ -102,6 +106,17 @@ void SparqlBlockWindow::paint(){
     connect(button_new_object, SIGNAL(clicked()),
             this, SLOT(addNewObject()));
 
+    button_reverse = new QPushButton( "MINUS" );
+    button_reverse->setMaximumWidth( width_box );
+    connect( button_reverse, SIGNAL( clicked() ),
+            this, SLOT( sceneReverse() ) );
+
+
+    QPushButton* button_open = new QPushButton( "Open" );
+    button_open->setMaximumWidth( width_box );
+    connect( button_open, SIGNAL( clicked() ),
+            this, SLOT( openFile() ) );
+
     QPushButton* button_save = new QPushButton("Save");
     button_save->setMaximumWidth(width_box);
     connect(button_save, SIGNAL(clicked()),
@@ -109,6 +124,8 @@ void SparqlBlockWindow::paint(){
 
     QPushButton* button_add = new QPushButton("Add");
     button_add->setMaximumWidth(width_box);
+    connect( button_add, SIGNAL( clicked() ),
+            this, SLOT( createBlock() ) );
 
     QVBoxLayout* layout = new QVBoxLayout();
     layout->addWidget(label);
@@ -125,7 +142,9 @@ void SparqlBlockWindow::paint(){
     layout->addWidget( limit_spin );
     layout->addWidget( button_new_area );
     layout->addWidget( button_new_object );
+    layout->addWidget( button_reverse );
     layout->addSpacerItem(new QSpacerItem(0, 2000, QSizePolicy::Maximum, QSizePolicy::Maximum));
+    layout->addWidget( button_open );
     layout->addWidget(button_save);
     layout->addWidget(button_add);
     layout->setStretch(10, 10);
@@ -192,6 +211,74 @@ void SparqlBlockWindow::addNewObject(){
 
 void SparqlBlockWindow::createSparqlBlock()
 {
+    SparqlBlockSetting* setting = getSetting();
+
+    QString FileName = QFileDialog::getSaveFileName( this, "Save as", QDir::currentPath(), tr( "JSON (*.json);;All files (*)" ) );
+    QFile file( FileName );
+    if( file.open(QIODevice::WriteOnly ) ){
+        QJsonDocument json;
+        json.setObject( setting->getJsonFromSetting() );
+        file.write( json.toJson() );
+    }
+    file.close();
+
+    emit newSparqlBlockCreated( setting );
+}
+
+void SparqlBlockWindow::openFile()
+{
+    QString FileName = QFileDialog::getOpenFileName( this, "Choose File", QDir::currentPath(), tr( "JSON (*.json);;All files (*)" ) );
+    QFile file( FileName );
+    if ( file.open( QIODevice::ReadOnly ) ){
+        setting->setSettingFromJson( file.readAll() );
+    }
+    file.close();
+    setSetting();
+}
+
+void SparqlBlockWindow::setSetting()
+{
+    name_line_edit->setText( setting->name );
+    limit_spin->setValue( setting->limit );
+    scene()->clear();
+
+    QVector<DiagramSparqlAtom*> item_list;
+    for( const auto& next_block : setting->blocks )
+    {
+        DiagramSparqlAtom* item = new DiagramSparqlAtom( scene()->getMenu(), setting->polygon );
+        item->setPos( next_block.pos );
+        item->setText( next_block.text );
+        item_list.push_back( item );
+        scene()->addItem( item );
+    }
+
+    for( const auto& next_line : setting->lines )
+    {
+        scene()->createArrow( item_list[next_line.startBlock], item_list[next_line.endBlock] )->setText( next_line.text );
+    }
+}
+
+void SparqlBlockWindow::createBlock()
+{
+    emit newSparqlBlockCreated( getSetting() );
+}
+
+void SparqlBlockWindow::sceneReverse()
+{
+    if ( scene() == origin_scene )
+    {
+        button_reverse->setText( "ORIGIN" );
+        setScene( minus_scene );
+    }
+    else
+    {
+        button_reverse->setText( "MINUS" );
+        setScene( origin_scene );
+    }
+}
+
+SparqlBlockSetting* SparqlBlockWindow::getSetting()
+{
     SparqlBlockSetting* setting = new SparqlBlockSetting();
     QVector<DiagramSparqlAtom*> blocks;
     QVector<Arrow*> arrows;
@@ -223,6 +310,5 @@ void SparqlBlockWindow::createSparqlBlock()
 
     setting->name = name_line_edit->text();
     setting->limit = limit_spin->value();
-
-    emit newSparqlBlockCreated( setting );
+    return setting;
 }

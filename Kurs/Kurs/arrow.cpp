@@ -103,7 +103,7 @@ void Arrow::updatePosition()
     if (line_edit->text().isEmpty()){
         line_edit->setVisible(false);
     }
-    line_edit->setGeometry( rect.x() + rect.width() / 2 - 30, rect.y() + rect.height() / 2 - 12, 60, 25 );
+    line_edit->setGeometry( rect.x() + rect.width() / 2 - 40, rect.y() + rect.height() / 2 - 12, 80, 25 );
 }
 //! [3]
 
@@ -164,6 +164,12 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 //! [7]
 void Arrow::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent){
     line_edit->setVisible(true);
+}
+
+void Arrow::setText( const QString &str )
+{
+    line_edit->setVisible( true );
+    line_edit->setText( str );
 }
 
 QString Arrow::getText()

@@ -26,12 +26,17 @@ DiagramSparqlAtom::DiagramSparqlAtom( QMenu* contextMenu, QPolygonF polygonf, QG
 void DiagramSparqlAtom::setMyPolygon( QPolygonF polygonf )
 {
     myPolygon = polygonf;
-    setPolygon(myPolygon);
+    setPolygon( myPolygon );
 }
 
 QPolygonF DiagramSparqlAtom::getSetting()
 {
     return myPolygon;
+}
+
+void DiagramSparqlAtom::setText( const QString &str )
+{
+    line_edit->setText( str );
 }
 
 QString DiagramSparqlAtom::getText()

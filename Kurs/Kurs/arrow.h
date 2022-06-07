@@ -82,6 +82,7 @@ public:
     DiagramItem *startItem() const { return myStartItem; }
     DiagramItem *endItem() const { return myEndItem; }
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    void setText( const QString& str );
     QString getText();
     void updatePosition();
 
