@@ -357,7 +357,7 @@ void MainWindow::slotCreateCompositeBlock(){
 }
 
 void MainWindow::slotCreateSparqlBlock(){
-    SparqlBlockWindow* window = new SparqlBlockWindow( createScene(), createScene(), this );
+    SparqlBlockWindow* window = new SparqlBlockWindow( createScene(), this );
     connect(window, SIGNAL( newSparqlBlockCreated( VirtualSetting* ) ),
             this, SLOT( slotOnSignalNewBlockCreated( VirtualSetting* ) ) );
     tabWidget->addTab(window, "NewSparqlBlock");

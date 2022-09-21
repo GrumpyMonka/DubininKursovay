@@ -54,36 +54,38 @@ BasedBlockSetting* SparqlBlockSetting::ConvertToBasedBlockSetting()
             "xmlHttp.setRequestHeader(\"Accept\", \"application/sparql-results+json\");\n"
             "var answer = xmlHttp.send(";
 
-    QVector<QString> list;
     QString request =
             "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
             "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
             "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
             "PREFIX : <http://www.semanticweb.org/SEARCH/ontologies/2021/4/OICA_project#>\n\n"
-            "SELECT ";
+            "SELECT *";
 
-    QString body;
+    QMap<QString, QString> area_body;
     for( auto line : lines )
     {
-        list.push_back( blocks[line.startBlock].text );
-        body += list.back();
-        body += " " + line.text;
-        list.push_back( blocks[line.endBlock].text );
-        body += " " + list.back();
-        body += ".\n";
+        QString path = blocks[line.startBlock].path;
+        QString str = blocks[line.startBlock].text;
+        str += " " + line.text;
+        str += " " + blocks[line.endBlock].text;
+        str += ".\n";
+        area_body[path] += str;
     }
 
-    for ( const auto& str : list )
+    QString body;
+    if ( area_body.end() != area_body.find( "ORIGIN" ) )
     {
-        if ( '?' == str[0] )
-        {
-            request += str + " ";
-        }
+        body += "{\n" + area_body["ORIGIN"] + "}";
+    }
+    area_body.remove( "ORIGIN" );
+    for ( const auto& key : area_body.keys() )
+    {
+        body += key + "{\n" + area_body[key] + "}";
     }
 
     request += "\nWHERE\n"
-            "  {\n";
+            "{\n";
     request += "  " + body;
     request += "} LIMIT " + QString::number( limit );
 
@@ -93,7 +95,7 @@ BasedBlockSetting* SparqlBlockSetting::ConvertToBasedBlockSetting()
     setting->name = "SPARQL";
     setting->script = script + "\"query=" + QUrl::toPercentEncoding(request) + "\");\ny.push(answer);";
     qDebug() << request;
-    return setting;
+    return setting;   
 }
 
 void SparqlBlockSetting::setSettingFromJson( const QString& str )
@@ -127,30 +129,10 @@ void SparqlBlockSetting::setSettingFromJson( const QJsonValue& value )
         }
     }
 }
-/*
-    struct LineSaver
-    {
-        int startBlock;
-        int endBlock;
-        QString text;
-    };
 
-    struct BlockSaver
-    {
-        QString text;
-        QPointF pos;
-    };
-
-    QVector<BlockSaver> blocks;
-    QVector<LineSaver> lines;
-    int limit;
-    QPixmap image;
-    QString name;
-
-    QPolygonF polygon;
-*/
 QJsonObject SparqlBlockSetting::getJsonFromSetting()
 {
+ /*
     QJsonObject obj;
 
     QJsonObject data;
@@ -184,6 +166,7 @@ QJsonObject SparqlBlockSetting::getJsonFromSetting()
     obj.insert( "type", QJsonValue( "sparql" ) );
     obj.insert( "data", QJsonValue( data ) );
     return obj;
+*/
 }
 
 QJsonValue SparqlBlockSetting::jsonValFromPixmap( const QPixmap &p )

@@ -3,17 +3,15 @@
 
 #include <QFileDialog>
 
-SparqlBlockWindow::SparqlBlockWindow(DiagramScene* origin, DiagramScene* minus, QWidget* parent)
-    : DiagramView(origin, parent), origin_scene( origin ), minus_scene( minus )
+SparqlBlockWindow::SparqlBlockWindow( DiagramScene* scene, QWidget* parent )
+    : DiagramView( scene, parent )
 {
     paint();
     setting = new SparqlBlockSetting();
-    addNewArea();
-    connect(origin, SIGNAL( itemSelected( DiagramItem* ) ),
+    setNewScene();
+    connect( scene, SIGNAL( itemSelected( DiagramItem* ) ),
             this, SLOT( itemSelected( DiagramItem* ) ) );
-    connect(minus, SIGNAL( itemSelected( DiagramItem* ) ),
-            this, SLOT( itemSelected( DiagramItem* ) ) );
-}
+    }
 
 void SparqlBlockWindow::paint(){
     QGroupBox* box = new QGroupBox("", this);
@@ -106,12 +104,6 @@ void SparqlBlockWindow::paint(){
     connect(button_new_object, SIGNAL(clicked()),
             this, SLOT(addNewObject()));
 
-    button_reverse = new QPushButton( "MINUS" );
-    button_reverse->setMaximumWidth( width_box );
-    connect( button_reverse, SIGNAL( clicked() ),
-            this, SLOT( sceneReverse() ) );
-
-
     QPushButton* button_open = new QPushButton( "Open" );
     button_open->setMaximumWidth( width_box );
     connect( button_open, SIGNAL( clicked() ),
@@ -142,7 +134,6 @@ void SparqlBlockWindow::paint(){
     layout->addWidget( limit_spin );
     layout->addWidget( button_new_area );
     layout->addWidget( button_new_object );
-    layout->addWidget( button_reverse );
     layout->addSpacerItem(new QSpacerItem(0, 2000, QSizePolicy::Maximum, QSizePolicy::Maximum));
     layout->addWidget( button_open );
     layout->addWidget(button_save);
@@ -197,7 +188,16 @@ void SparqlBlockWindow::itemSelected(DiagramItem* item){
 
 void SparqlBlockWindow::addNewArea(){
     DiagramItem* item = new DiagramItem(scene()->getMenu());
+    QPolygonF polygon;
+    polygon << QPointF( -300, 200 )
+            << QPointF( 300, 200 )
+            << QPointF( 300, -200 )
+            << QPointF( -300, -200 )
+            << QPointF( -300, 200 );
+    item->myPolygon = polygon;
+    item->setPolygon( item->myPolygon );
     item->setPos(2500, 2500);
+    scene()->createArrow( Areas[0], item )->setZValue( -2000 );
     scene()->addItem(item);
     selectedItem = item;
 }
@@ -206,7 +206,7 @@ void SparqlBlockWindow::addNewObject(){
     DiagramSparqlAtom* dItem = new DiagramSparqlAtom( scene()->getMenu(), setting->polygon );
     dItem->setPos(2500, 2500);
     scene()->addItem(dItem);
-
+    selectedItem = dItem;
 }
 
 void SparqlBlockWindow::createSparqlBlock()
@@ -241,7 +241,8 @@ void SparqlBlockWindow::setSetting()
     name_line_edit->setText( setting->name );
     limit_spin->setValue( setting->limit );
     scene()->clear();
-
+    setNewScene();
+    /*
     QVector<DiagramSparqlAtom*> item_list;
     for( const auto& next_block : setting->blocks )
     {
@@ -256,6 +257,7 @@ void SparqlBlockWindow::setSetting()
     {
         scene()->createArrow( item_list[next_line.startBlock], item_list[next_line.endBlock] )->setText( next_line.text );
     }
+    */
 }
 
 void SparqlBlockWindow::createBlock()
@@ -263,18 +265,51 @@ void SparqlBlockWindow::createBlock()
     emit newSparqlBlockCreated( getSetting() );
 }
 
-void SparqlBlockWindow::sceneReverse()
+void SparqlBlockWindow::setNewScene()
 {
-    if ( scene() == origin_scene )
-    {
-        button_reverse->setText( "ORIGIN" );
-        setScene( minus_scene );
-    }
-    else
-    {
-        button_reverse->setText( "MINUS" );
-        setScene( origin_scene );
-    }
+    scene()->clear();
+    QPolygonF polygon;
+    polygon << QPointF( -300, 200 )
+            << QPointF( 300, 200 )
+            << QPointF( 300, -200 )
+            << QPointF( -300, -200 )
+            << QPointF( -300, 200 );
+
+    DiagramItem* itemOrigin = new DiagramItem( scene()->getMenu() );
+    itemOrigin->myPolygon = polygon;
+    itemOrigin->setPolygon( itemOrigin->myPolygon );
+    itemOrigin->setPos( 2150, 2250 );
+    itemOrigin->setBrush( Qt::white );
+    itemOrigin->setZValue( -2000 );
+
+    DiagramItem* itemMinus = new DiagramItem( scene()->getMenu() );
+    itemMinus->myPolygon = polygon;
+    itemMinus->setPolygon( itemMinus->myPolygon );
+    itemMinus->setPos( 2850, 2250 );
+    itemMinus->setBrush( Qt::white );
+    itemMinus->setZValue( -2000 );
+
+    DiagramItem* itemUnion = new DiagramItem( scene()->getMenu() );
+    itemUnion->myPolygon = polygon;
+    itemUnion->setPolygon( itemUnion->myPolygon );
+    itemUnion->setPos( 2150, 2750 );
+    itemUnion->setBrush( Qt::white );
+    itemUnion->setZValue( -2000 );
+
+    scene()->addItem( itemOrigin );
+    scene()->addItem( itemMinus );
+    scene()->addItem( itemUnion );
+    Areas.push_back( itemOrigin );
+    Areas.push_back( itemMinus );
+    Areas.push_back( itemUnion );
+
+    Arrow* arrow_OM = scene()->createArrow( itemOrigin, itemMinus );
+    arrow_OM->setText( "MINUS" );
+    arrow_OM->setZValue( -3000 );
+
+    Arrow* arrow_OU = scene()->createArrow( itemOrigin, itemUnion );
+    arrow_OU->setText( "UNION" );
+    arrow_OU->setZValue( -3000 );
 }
 
 SparqlBlockSetting* SparqlBlockWindow::getSetting()
@@ -298,17 +333,69 @@ SparqlBlockSetting* SparqlBlockWindow::getSetting()
 
     for ( auto& block : blocks )
     {
-        setting->blocks.push_back( { block->getText(), block->pos() } );
+        QString path;
+        for( const auto& item : Areas )
+        {
+            if ( CheckCollisionArea( block, item ) )
+            {
+                if ( item->getArrows().size() )
+                {
+                    Arrow* arrow = item->getArrows()[0];
+                    if ( arrow->endItem() == item )
+                    {
+                        path = arrow->getText();
+                    }
+                    else
+                    {
+                        path = "ORIGIN";
+                    }
+                }
+                setting->blocks.push_back( { block->getText(), block->pos(), path } );
+            }
+        }
     }
 
     for ( auto& arrow : arrows )
     {
-        setting->lines.push_back( { blocks.indexOf( qgraphicsitem_cast<DiagramSparqlAtom*>( arrow->startItem() ) ),
-                                    blocks.indexOf( qgraphicsitem_cast<DiagramSparqlAtom*>( arrow->endItem() ) ),
-                                    arrow->getText() } );
+        int p1 = blocks.indexOf( qgraphicsitem_cast<DiagramSparqlAtom*>( arrow->startItem() ) );
+        int p2 = blocks.indexOf( qgraphicsitem_cast<DiagramSparqlAtom*>( arrow->endItem() ) );
+        if( -1 != p1 && -1 != p2 )
+        {
+            setting->lines.push_back( { p1, p2, arrow->getText() } );
+        }
+    }
+
+    for ( const auto& area : Areas )
+    {
+        QString path;
+        Arrow* arrow = area->getArrows()[0];
+        if ( arrow->endItem() == area )
+        {
+            path = arrow->getText();
+        }
+        else
+        {
+            path = "ORIGIN";
+        }
+        setting->areas.push_back( { QPointF( area->getEndPos().x() - area->getStartPos().x(),
+                                 area->getEndPos().y() - area->getStartPos().y() ), area->pos(), path } );
     }
 
     setting->name = name_line_edit->text();
     setting->limit = limit_spin->value();
     return setting;
 }
+
+bool SparqlBlockWindow::CheckCollisionArea( const DiagramItem* item, DiagramItem* area )
+{
+    QPointF item_pos = item->pos();
+    if ( item_pos.x() > area->pos().x() + area->getStartPos().x() &&
+         item_pos.x() < area->pos().x() + area->getEndPos().x() &&
+         item_pos.y() > area->pos().y() + area->getStartPos().y() &&
+         item_pos.y() < area->pos().y() + area->getEndPos().y() )
+    {
+        return true;
+    }
+    return false;
+}
+

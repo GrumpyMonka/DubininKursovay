@@ -27,14 +27,24 @@ public:
     {
         QString text;
         QPointF pos;
+        QString path;
     };
+
+    struct AreaSaver
+    {
+        QPointF polygon;
+        QPointF pos;
+        QString name;
+    };
+
+    QString name;
+    int limit;
+    QPixmap image;
 
     QVector<BlockSaver> blocks;
     QVector<LineSaver> lines;
-    int limit;
-    QPixmap image;
-    QString name;
 
+    QVector<AreaSaver> areas;
     QPolygonF polygon;
 
     BasedBlockSetting* ConvertToBasedBlockSetting();

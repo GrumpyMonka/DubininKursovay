@@ -143,19 +143,19 @@ void OutputWidget::on_pushButton_clicked()
     QScriptValue result;
 
     if(ui->checkBox_2->isChecked()){
-        QString temp = loadScript(":/scripts/script.js");
+        QString temp = loadScript("Scripts/script.js");
         if(temp.length()){
             ui->textEdit_2->setText("Defult script: " + temp);
         }
     }
 
     if(ui->checkBox->isChecked()){
-        QString temp = loadScript(":/scripts/XMLHttpRequest.js");
+        QString temp = loadScript("Scripts/XMLHttpRequest.js");
         if(temp.length()){
             ui->textEdit_2->setText("Defult script: " + temp);
         }
     }
-    QString temp = loadScript(":/scripts/progress.js");
+    QString temp = loadScript("Scripts/progress.js");
     if(temp.length()){
         ui->textEdit_2->setText("Progress script: " + temp);
         return;
@@ -168,7 +168,7 @@ void OutputWidget::on_pushButton_clicked()
     }
 
     //temp = loadScript("C:/Temp/Study/6 semestr/Kurs/Kurs/scripts/block_logic.js");
-    temp = loadScript(":/scripts/block_logic.js");
+    temp = loadScript("Scripts/block_logic.js");
     if(temp.length()){
         ui->textEdit_2->setText("Failed script: " + temp);
         return;

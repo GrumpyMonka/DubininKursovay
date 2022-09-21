@@ -10,7 +10,7 @@ class SparqlBlockWindow : public DiagramView
 {
     Q_OBJECT
 public:
-    SparqlBlockWindow(DiagramScene* origin, DiagramScene* minus, QWidget* parent = 0);
+    SparqlBlockWindow( DiagramScene* scene, QWidget* parent = 0 );
     void paint() override;
 
 public slots:
@@ -24,18 +24,15 @@ public slots:
     void openFile();
     void setSetting();
     void createBlock();
-    void sceneReverse();
+    void setNewScene();
     SparqlBlockSetting* getSetting();
+
+    bool CheckCollisionArea( const DiagramItem* item, DiagramItem* area );
 
 signals:
     void newSparqlBlockCreated( VirtualSetting* );
 
 private:
-    DiagramScene* origin_scene;
-    DiagramScene* minus_scene;
-    QPushButton* button_reverse;
-    QLabel* name_window_scene;
-
     QRectF size = QRectF(-50, -50, 100, 100);
     DiagramItem* selectedItem;
     QSpinBox* size_x_spin;
@@ -45,6 +42,8 @@ private:
     SparqlBlockSetting* setting;
     QSpinBox* limit_spin;
     QLineEdit* name_line_edit;
+
+    QVector<DiagramItem*> Areas;
 };
 
 #endif // SPARQLBLOCKWINDOW_H
