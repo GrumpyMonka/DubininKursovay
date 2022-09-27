@@ -1,5 +1,2 @@
-/*
-!/Kurs
-!/Executable
-!/README.txt
-!.gitignore
+/build*
+*user*
